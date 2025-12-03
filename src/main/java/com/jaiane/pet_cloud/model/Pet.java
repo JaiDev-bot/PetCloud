@@ -1,0 +1,83 @@
+package com.jaiane.pet_cloud.model;
+
+
+import jakarta.persistence.*;
+
+
+@Table(name="DB_PET")
+@Entity
+public class Pet {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private int idade;
+    private String raca;
+    private boolean castracao;
+    private String imagem;
+
+
+    public Pet(){
+
+    }
+
+
+    public Pet(Long id, String name, int idade, String raca, boolean castracao, String imagem) {
+        this.id = id;
+        this.name = name;
+        this.idade = idade;
+        this.raca = raca;
+        this.castracao = castracao;
+        this.imagem = imagem;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+
+    public String getRaca() {
+        return raca;
+    }
+
+    public void setRaca(String raca) {
+        this.raca = raca;
+    }
+
+    public boolean isCastracao() {
+        return castracao;
+    }
+
+    public void setCastracao(boolean castracao) {
+        this.castracao = castracao;
+    }
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
+}
