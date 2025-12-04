@@ -29,14 +29,9 @@ public class PetService {
     public Pet addPet(PetRequestDto dados)  {
 
         try{
-            MultipartFile arquivo = dados.arquivo();
-            String nomeArquivo = UUID.randomUUID().toString() + "-" + arquivo.getOriginalFilename();
 
-            BlobClient blobClient = blobContainerClient.getBlobClient(nomeArquivo);
 
-            blobClient.upload(arquivo.getInputStream(), arquivo.getSize(), true);
-
-            String urlFoto = blobClient.getBlobUrl();
+            String urlFoto = enviarImagemParaAzure(dados.arquivo());
 
             Pet novoPet = new Pet();
             novoPet.setName(dados.name());
@@ -50,6 +45,17 @@ public class PetService {
             throw  new RuntimeException("Erro ao fazer upload da imagem", e);
 
         }
+    }
+
+    private String enviarImagemParaAzure(MultipartFile arquivo) throws IOException{
+
+        String nomeArquivo = UUID.randomUUID().toString() + "-" + arquivo.getOriginalFilename();
+
+        BlobClient blobClient = blobContainerClient.getBlobClient(nomeArquivo);
+
+        blobClient.upload(arquivo.getInputStream(), arquivo.getSize(), true);
+
+        return  blobClient.getBlobUrl();
     }
 
 
