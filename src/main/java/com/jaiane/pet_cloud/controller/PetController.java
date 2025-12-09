@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/pet")
 public class PetController {
@@ -24,7 +26,6 @@ public class PetController {
 
     @PostMapping
     public ResponseEntity<String> savePet (@ModelAttribute PetRequestDto petRequestDto){
-
         try{
 
             Pet petSalvo = petService.addPet(petRequestDto);
@@ -34,7 +35,23 @@ public class PetController {
         }catch (Exception e){
             logger.error("Não foi possivel adicionar o animal.", e);
             return  ResponseEntity.internalServerError().body("Não foi possivel adicionar o animal.");
+        }
+    }
 
+    @GetMapping
+    public ResponseEntity<List<Pet>> listarPet (){
+
+        try{
+            List<Pet> pets = petService.listar();
+
+            if(pets.isEmpty()){
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(pets);
+
+        } catch (Exception e) {
+            logger.error("Não foi possivel listar pets", e);
+            return  ResponseEntity.internalServerError().build();
         }
 
     }
