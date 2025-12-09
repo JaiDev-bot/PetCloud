@@ -36,6 +36,7 @@ public class PetService {
             Pet novoPet = new Pet();
             novoPet.setName(dados.name());
             novoPet.setRaca(dados.raca());
+            novoPet.setIdade(dados.idade());
             novoPet.setImagem(urlFoto);
 
             return petRepository.save(novoPet);
