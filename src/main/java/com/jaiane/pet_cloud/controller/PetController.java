@@ -2,6 +2,7 @@ package com.jaiane.pet_cloud.controller;
 
 
 import com.jaiane.pet_cloud.dto.PetRequestDto;
+import com.jaiane.pet_cloud.exception.RecursoNaoEncontradoException;
 import com.jaiane.pet_cloud.model.Pet;
 import com.jaiane.pet_cloud.service.PetService;
 import org.slf4j.Logger;
@@ -53,6 +54,29 @@ public class PetController {
             logger.error("Não foi possivel listar pets", e);
             return  ResponseEntity.internalServerError().build();
         }
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePet (@PathVariable Long id){
+
+        try{
+
+            petService.delete(id);
+            return ResponseEntity.noContent().build();
+
+        } catch (RecursoNaoEncontradoException e) {
+            logger.warn("Tentativa de deletar recurso inexistente: \" + id");
+            throw e;
+        }
+
+
+        catch (Exception e){
+            logger.error(" Não foi possivel deletar o pet com o ID: " + id, e);
+            return ResponseEntity.internalServerError().build();
+        }
+
+
 
     }
 
