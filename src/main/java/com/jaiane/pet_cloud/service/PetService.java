@@ -5,6 +5,7 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 
 import com.jaiane.pet_cloud.dto.PetRequestDto;
+import com.jaiane.pet_cloud.exception.RecursoNaoEncontradoException;
 import com.jaiane.pet_cloud.model.Pet;
 import com.jaiane.pet_cloud.repository.PetRepository;
 
@@ -31,8 +32,6 @@ public class PetService {
     public Pet addPet(PetRequestDto dados)  {
 
         try{
-
-
             String urlFoto = enviarImagemParaAzure(dados.arquivo());
 
             Pet novoPet = new Pet();
@@ -56,6 +55,15 @@ public class PetService {
 
     }
 
+    public void delete(Long id){
+        if(petRepository.existsById(id)){
+            petRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Pet não encontrado com o ID: " + id));
+        }
+
+        petRepository.deleteById(id);
+
+    }
+
     private String enviarImagemParaAzure(MultipartFile arquivo) throws IOException{
 
         String nomeArquivo = UUID.randomUUID().toString() + "-" + arquivo.getOriginalFilename();
@@ -66,6 +74,8 @@ public class PetService {
 
         return  blobClient.getBlobUrl();
     }
+
+
 
 
 }
