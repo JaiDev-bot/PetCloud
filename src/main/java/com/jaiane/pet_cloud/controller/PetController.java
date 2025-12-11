@@ -21,79 +21,61 @@ public class PetController {
 
     private final PetService petService;
 
-    public PetController(PetService petService){
+    public PetController(PetService petService) {
         this.petService = petService;
     }
 
     @PostMapping
-    public ResponseEntity<String> savePet (@ModelAttribute PetRequestDto petRequestDto){
-        try{
+    public ResponseEntity<String> savePet(@ModelAttribute PetRequestDto petRequestDto) {
+        try {
 
             Pet petSalvo = petService.addPet(petRequestDto);
-                return ResponseEntity.status(HttpStatus.CREATED).body(petSalvo.getName() + " foi adicionado com sucesso");
+            return ResponseEntity.status(HttpStatus.CREATED).body(petSalvo.getName() + " foi adicionado com sucesso");
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Não foi possivel adicionar o animal.", e);
-             return  ResponseEntity.internalServerError().body("Não foi possivel adicionar o animal.");
+            return ResponseEntity.internalServerError().body("Não foi possivel adicionar o animal.");
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<Pet>> listarPet (){
+    public ResponseEntity<List<Pet>> listarPet() {
 
-        try{
+        try {
             List<Pet> pets = petService.listar();
 
-            if(pets.isEmpty()){
+            if (pets.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }
-                return ResponseEntity.status(HttpStatus.OK).body(pets);
+            return ResponseEntity.status(HttpStatus.OK).body(pets);
 
         } catch (Exception e) {
             logger.error("Não foi possivel listar pets", e);
-                return  ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().build();
         }
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePet (@PathVariable Long id){
+    public ResponseEntity<Void> deletePet(@PathVariable Long id) {
 
-        try{
+        petService.delete(id);
 
-            petService.delete(id);
-            return ResponseEntity.noContent().build();
-
-        } catch (RecursoNaoEncontradoException e) {
-            logger.warn("Tentativa de deletar recurso inexistente: \" + id");
-            throw e;
-        }
-
-        catch (Exception e){
-             logger.error(" Não foi possivel deletar o pet com o ID: " + id, e);
-             return ResponseEntity.internalServerError().build();
-        }
-
+        return ResponseEntity.noContent().build();
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Pet> atualizarPet(@PathVariable Long id,
                                             @RequestBody PetRequestDto novosDados) {
 
-        try {
-            Pet petAtualizado = petService.atualizar(id, novosDados);
-            return ResponseEntity.ok(petAtualizado);
+        Pet petAtualizado = petService.atualizar(id, novosDados);
 
-        } catch (RecursoNaoEncontradoException e) {
-            throw e;
-
-        } catch (Exception e) {
-            logger.error("não foi possivel  atualizar o pet com o ID: " + id, e);
-            return ResponseEntity.internalServerError().build();
-
-        }
-    }
+        return ResponseEntity.ok(petAtualizado);
 
 
     }
+
+
+}
