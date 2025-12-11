@@ -75,6 +75,19 @@ public class PetService {
         return  blobClient.getBlobUrl();
     }
 
+    public Pet atualizar (Long id, PetRequestDto dadosNovos){
+        Pet petExistente = petRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pet não encontrado para atualização com o ID: " + id));
+
+        petExistente.setName(dadosNovos.name());
+        petExistente.setIdade(dadosNovos.idade());
+        petExistente.setRaca(dadosNovos.raca());
+
+        return petRepository.save(petExistente);
+
+
+
+    }
 
 
 
