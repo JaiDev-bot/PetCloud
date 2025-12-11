@@ -30,12 +30,12 @@ public class PetController {
         try{
 
             Pet petSalvo = petService.addPet(petRequestDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(petSalvo.getName() + " foi adicionado com sucesso");
+                return ResponseEntity.status(HttpStatus.CREATED).body(petSalvo.getName() + " foi adicionado com sucesso");
 
 
         }catch (Exception e){
             logger.error("Não foi possivel adicionar o animal.", e);
-            return  ResponseEntity.internalServerError().body("Não foi possivel adicionar o animal.");
+             return  ResponseEntity.internalServerError().body("Não foi possivel adicionar o animal.");
         }
     }
 
@@ -48,11 +48,11 @@ public class PetController {
             if(pets.isEmpty()){
                 return ResponseEntity.noContent().build();
             }
-            return ResponseEntity.status(HttpStatus.OK).body(pets);
+                return ResponseEntity.status(HttpStatus.OK).body(pets);
 
         } catch (Exception e) {
             logger.error("Não foi possivel listar pets", e);
-            return  ResponseEntity.internalServerError().build();
+                return  ResponseEntity.internalServerError().build();
         }
 
     }
@@ -70,14 +70,30 @@ public class PetController {
             throw e;
         }
 
-
         catch (Exception e){
-            logger.error(" Não foi possivel deletar o pet com o ID: " + id, e);
-            return ResponseEntity.internalServerError().build();
+             logger.error(" Não foi possivel deletar o pet com o ID: " + id, e);
+             return ResponseEntity.internalServerError().build();
         }
 
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Pet> atualizarPet(@PathVariable Long id,
+                                            @RequestBody PetRequestDto novosDados) {
+
+        try {
+            Pet petAtualizado = petService.atualizar(id, novosDados);
+            return ResponseEntity.ok(petAtualizado);
+
+        } catch (RecursoNaoEncontradoException e) {
+            throw e;
+
+        } catch (Exception e) {
+            logger.error("não foi possivel  atualizar o pet com o ID: " + id, e);
+            return ResponseEntity.internalServerError().build();
+
+        }
+    }
 
 
-}
+    }
