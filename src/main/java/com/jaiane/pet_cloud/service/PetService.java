@@ -6,10 +6,13 @@ import com.azure.storage.blob.BlobContainerClient;
 
 import com.jaiane.pet_cloud.dto.PetRequestDto;
 import com.jaiane.pet_cloud.exception.RecursoNaoEncontradoException;
+import com.jaiane.pet_cloud.handler.GlobalExceptionHandler;
 import com.jaiane.pet_cloud.model.Pet;
 import com.jaiane.pet_cloud.repository.PetRepository;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,13 +23,22 @@ import java.util.UUID;
 @Service
 public class PetService {
 
+
+
     private final PetRepository petRepository;
     private final BlobContainerClient blobContainerClient;
+    private final AzureAIService aiService;
 
-    public PetService(PetRepository petRepository, BlobContainerClient blobContainerClient){
+    private static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+
+
+
+
+    public PetService(PetRepository petRepository, BlobContainerClient blobContainerClient, AzureAIService aiService){
         this.petRepository = petRepository;
         this.blobContainerClient = blobContainerClient;
-
+        this.aiService = aiService;
     }
 
     public Pet addPet(PetRequestDto dados)  {
@@ -34,16 +46,20 @@ public class PetService {
         try{
             String urlFoto = enviarImagemParaAzure(dados.arquivo());
 
+            List<String> tags = aiService.analisarImagem(dados.arquivo());
+
             Pet novoPet = new Pet();
             novoPet.setName(dados.name());
             novoPet.setRaca(dados.raca());
             novoPet.setIdade(dados.idade());
             novoPet.setImagem(urlFoto);
+            novoPet.setTags(tags);
 
             return petRepository.save(novoPet);
 
 
         }catch (IOException e) {
+            logger.error(" Erro ao fazer upload da imagem", e );
             throw  new RuntimeException("Erro ao fazer upload da imagem", e);
 
         }

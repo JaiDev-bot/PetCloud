@@ -17,7 +17,6 @@ public class Pet {
     private String name;
     private int idade;
     private String raca;
-    private boolean castracao;
     private String imagem;
     private List<String> tags;
 
@@ -27,12 +26,11 @@ public class Pet {
     }
 
 
-    public Pet(Long id, String name, int idade, String raca, boolean castracao, String imagem, List<String> tags) {
+    public Pet(Long id, String name, int idade, String raca,  String imagem, List<String> tags) {
         this.id = id;
         this.name = name;
         this.idade = idade;
         this.raca = raca;
-        this.castracao = castracao;
         this.imagem = imagem;
         this.tags = tags;
     }
@@ -69,13 +67,7 @@ public class Pet {
         this.raca = raca;
     }
 
-    public boolean isCastracao() {
-        return castracao;
-    }
 
-    public void setCastracao(boolean castracao) {
-        this.castracao = castracao;
-    }
 
     public String getImagem() {
         return imagem;
