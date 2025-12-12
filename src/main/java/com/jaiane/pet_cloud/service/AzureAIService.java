@@ -10,19 +10,26 @@ import java.util.List;
 @Service
 public class AzureAIService {
 
+
+    ///manipulação
+
     public List<String> analisarImagem (MultipartFile arquivo){
 
         System.out.println("---- Chamando o Azure AI para analise...");
 
-        if(Math.random() < 0.5){
+        String nomeArquivo = arquivo.getOriginalFilename().toLowerCase();
 
-            return List.of("cachorro", "feliz", "deitado", "pelo branco" );
-
-        }else {
-
-            return  List.of("gato", "dormindo", "interno", "sofá");
-
+        if (nomeArquivo.contains("cachorro")) {
+            return List.of("cachorro", "pelo", "rebaixado", "feliz");
+        } else if (nomeArquivo.contains("gato")) {
+            return List.of("gato", "sofá", "sapeca", "branco");
         }
+        else if(nomeArquivo.contains("gata")){
+            return List.of("linda", "estudiosa", "criativa", "engraçada", "romantica demais, um perigo");
+        } else {
+            return List.of("animal de estimação", "desconhecido");
+        }
+
 
     }
 }

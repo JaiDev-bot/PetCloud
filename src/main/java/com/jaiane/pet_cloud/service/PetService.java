@@ -24,9 +24,9 @@ import java.util.UUID;
 public class PetService {
 
 
-
+    private final AzureBlobService blobService;
     private final PetRepository petRepository;
-    private final BlobContainerClient blobContainerClient;
+
     private final AzureAIService aiService;
 
     private static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
@@ -35,16 +35,17 @@ public class PetService {
 
 
 
-    public PetService(PetRepository petRepository, BlobContainerClient blobContainerClient, AzureAIService aiService){
+    public PetService(PetRepository petRepository, BlobContainerClient blobContainerClient, AzureAIService aiService, AzureBlobService blobService){
         this.petRepository = petRepository;
-        this.blobContainerClient = blobContainerClient;
+
         this.aiService = aiService;
+        this.blobService = blobService;
     }
 
     public Pet addPet(PetRequestDto dados)  {
 
         try{
-            String urlFoto = enviarImagemParaAzure(dados.arquivo());
+            String urlFoto = blobService.enviarImagemParaAzure(dados.arquivo());
 
             List<String> tags = aiService.analisarImagem(dados.arquivo());
 
@@ -72,24 +73,24 @@ public class PetService {
     }
 
     public void delete(Long id){
-        if(petRepository.existsById(id)){
-            petRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Pet não encontrado com o ID: " + id));
-        }
+        Pet petParaDeletar = petRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pet não encontrado para deleção com o ID: " + id));
 
-        petRepository.deleteById(id);
+        String urlDaImagem = petParaDeletar.getImagem();
+
+        if (urlDaImagem != null && !urlDaImagem.isEmpty()) {
+            try {
+                blobService.deletarFoto(urlDaImagem);
+
+            }catch (Exception e){
+                logger.warn("Falha ao deletar a imagem do Azure Blob: {}", urlDaImagem, e);
+
+            }
+            }
 
     }
 
-    private String enviarImagemParaAzure(MultipartFile arquivo) throws IOException{
 
-        String nomeArquivo = UUID.randomUUID().toString() + "-" + arquivo.getOriginalFilename();
-
-        BlobClient blobClient = blobContainerClient.getBlobClient(nomeArquivo);
-
-        blobClient.upload(arquivo.getInputStream(), arquivo.getSize(), true);
-
-        return  blobClient.getBlobUrl();
-    }
 
     public Pet atualizar (Long id, PetRequestDto dadosNovos){
         Pet petExistente = petRepository.findById(id)

@@ -26,17 +26,11 @@ public class PetController {
     }
 
     @PostMapping
-    public ResponseEntity<String> savePet(@ModelAttribute PetRequestDto petRequestDto) {
-        try {
+    public ResponseEntity<Pet> savePet(@ModelAttribute PetRequestDto petRequestDto) {
 
             Pet petSalvo = petService.addPet(petRequestDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(petSalvo.getName() + " foi adicionado com sucesso");
+            return ResponseEntity.status(HttpStatus.CREATED).body(petSalvo);
 
-
-        } catch (Exception e) {
-            logger.error("Não foi possivel adicionar o animal.", e);
-            return ResponseEntity.internalServerError().body("Não foi possivel adicionar o animal.");
-        }
     }
 
     @GetMapping
