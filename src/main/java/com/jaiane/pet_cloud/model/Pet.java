@@ -3,6 +3,8 @@ package com.jaiane.pet_cloud.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 
 @Table(name="DB_PET")
 @Entity
@@ -17,6 +19,7 @@ public class Pet {
     private String raca;
     private boolean castracao;
     private String imagem;
+    private List<String> tags;
 
 
     public Pet(){
@@ -24,13 +27,14 @@ public class Pet {
     }
 
 
-    public Pet(Long id, String name, int idade, String raca, boolean castracao, String imagem) {
+    public Pet(Long id, String name, int idade, String raca, boolean castracao, String imagem, List<String> tags) {
         this.id = id;
         this.name = name;
         this.idade = idade;
         this.raca = raca;
         this.castracao = castracao;
         this.imagem = imagem;
+        this.tags = tags;
     }
 
     public Long getId() {
@@ -80,4 +84,13 @@ public class Pet {
     public void setImagem(String imagem) {
         this.imagem = imagem;
     }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
 }
