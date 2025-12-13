@@ -7,6 +7,7 @@ import com.azure.ai.vision.imageanalysis.models.ImageAnalysisResult;
 import com.azure.ai.vision.imageanalysis.models.VisualFeatures;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.util.BinaryData;
+import com.jaiane.pet_cloud.config.AzureAIConfigProperties;
 import com.jaiane.pet_cloud.dto.AzureAIResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,17 +26,27 @@ public class AzureAIService {
     private final ImageAnalysisClient client;
 
 
-    public AzureAIService(@Value("${azure.ai.vision.endpoint}") String endpoint,
-                          @Value("${azure.ai.vision.key}") String key) {
 
+    // O Construtor agora injeta o DTO de Configuração, garantindo que os valores foram lidos
+    public AzureAIService(AzureAIConfigProperties config) {
+
+        System.out.println("DEBUG: Tentando inicializar Azure AI Client via ConfigurationProperties...");
+
+        String endpoint = config.getEndpoint();
+        String key = config.getKey();
+
+        if (endpoint == null || endpoint.isEmpty() || key == null || key.isEmpty()) {
+            System.err.println("--- ERRO FATAL: KEY ou ENDPOINT do Azure AI Vision estão vazios! ---");
+            throw new IllegalArgumentException("CONFIGURAÇÃO DE CHAVE FALHOU. Verifique se o application.properties está na pasta 'resources'.");
+        }
 
         this.client = new ImageAnalysisClientBuilder()
                 .credential(new AzureKeyCredential(key))
                 .endpoint(endpoint)
                 .buildClient();
+
+        System.out.println("DEBUG: Azure AI Client inicializado com sucesso.");
     }
-
-
 
 
     public AzureAIResponse analisarImagem (MultipartFile arquivo){
