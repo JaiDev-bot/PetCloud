@@ -4,6 +4,7 @@ package com.jaiane.pet_cloud.service;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 
+import com.jaiane.pet_cloud.dto.AzureAIResponse;
 import com.jaiane.pet_cloud.dto.PetRequestDto;
 import com.jaiane.pet_cloud.exception.RecursoNaoEncontradoException;
 import com.jaiane.pet_cloud.handler.GlobalExceptionHandler;
@@ -35,9 +36,8 @@ public class PetService {
 
 
 
-    public PetService(PetRepository petRepository, BlobContainerClient blobContainerClient, AzureAIService aiService, AzureBlobService blobService){
+    public PetService(PetRepository petRepository, AzureAIService aiService, AzureBlobService blobService){
         this.petRepository = petRepository;
-
         this.aiService = aiService;
         this.blobService = blobService;
     }
@@ -47,14 +47,18 @@ public class PetService {
         try{
             String urlFoto = blobService.enviarImagemParaAzure(dados.arquivo());
 
-            List<String> tags = aiService.analisarImagem(dados.arquivo());
+            AzureAIResponse aiResponse = aiService.analisarImagem(dados.arquivo());
 
             Pet novoPet = new Pet();
             novoPet.setName(dados.name());
             novoPet.setRaca(dados.raca());
             novoPet.setIdade(dados.idade());
             novoPet.setImagem(urlFoto);
-            novoPet.setTags(tags);
+
+
+            novoPet.setTags(aiResponse.tags());
+            novoPet.setDescricao(aiResponse.descricao());
+            novoPet.setConfianca(aiResponse.confianca());
 
             return petRepository.save(novoPet);
 

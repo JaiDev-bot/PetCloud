@@ -1,35 +1,86 @@
 package com.jaiane.pet_cloud.service;
 
 
+import com.azure.ai.vision.imageanalysis.ImageAnalysisClient;
+import com.azure.ai.vision.imageanalysis.ImageAnalysisClientBuilder;
+import com.azure.ai.vision.imageanalysis.models.ImageAnalysisResult;
+import com.azure.ai.vision.imageanalysis.models.VisualFeatures;
+import com.azure.core.credential.AzureKeyCredential;
+import com.azure.core.util.BinaryData;
+import com.jaiane.pet_cloud.dto.AzureAIResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AzureAIService {
 
 
-    ///manipulação
+    private final ImageAnalysisClient client;
 
-    public List<String> analisarImagem (MultipartFile arquivo){
+
+    public AzureAIService(@Value("${azure.ai.vision.endpoint}") String endpoint,
+                          @Value("${azure.ai.vision.key}") String key) {
+
+
+        this.client = new ImageAnalysisClientBuilder()
+                .credential(new AzureKeyCredential(key))
+                .endpoint(endpoint)
+                .buildClient();
+    }
+
+
+
+
+    public AzureAIResponse analisarImagem (MultipartFile arquivo){
 
         System.out.println("---- Chamando o Azure AI para analise...");
 
-        String nomeArquivo = arquivo.getOriginalFilename().toLowerCase();
 
-        if (nomeArquivo.contains("cachorro")) {
-            return List.of("cachorro", "pelo", "rebaixado", "feliz");
-        } else if (nomeArquivo.contains("gato")) {
-            return List.of("gato", "sofá", "sapeca", "branco");
+        try (InputStream stream = arquivo.getInputStream()) {
+
+
+            /// conversão para binary e VisualFeatures
+
+            BinaryData binaryData = BinaryData.fromStream(stream);
+
+            ImageAnalysisResult result = client.analyze(
+                    binaryData,
+                    Arrays.asList(VisualFeatures.TAGS, VisualFeatures.CAPTION),
+                    null
+            );
+
+            List<String> tags = result.getTags().getValues().stream()
+                    .map(tag -> tag.getName())
+                    .collect(Collectors.toList());
+
+
+            String descricao = result.getCaption().getText();
+            Double confianca = result.getCaption().getConfidence();
+
+            return new AzureAIResponse(
+                    tags,
+                    descricao,
+                    confianca
+            );
+
+        } catch (IOException e) {
+
+            throw new RuntimeException("Erro ao processar o arquivo de imagem para a IA.", e);
+        } catch (Exception e) {
+
+            System.err.println("FALHA GRAVE NA CONEXÃO OU AUTENTICAÇÃO DO AZURE AI VISION ");
+            System.err.println("Mensagem do Azure: " + e.getMessage());
+
+            throw new RuntimeException("Falha na chamada da IA do Azure. Verifique se a KEY  está corretas.", e);
         }
-        else if(nomeArquivo.contains("gata")){
-            return List.of("linda", "estudiosa", "criativa", "engraçada", "romantica demais, um perigo");
-        } else {
-            return List.of("animal de estimação", "desconhecido");
-        }
-
-
     }
 }
+
+
