@@ -18,6 +18,11 @@ public class Pet {
     private int idade;
     private String raca;
     private String imagem;
+
+    private String descricao;
+    private Double confianca;
+
+    @ElementCollection
     private List<String> tags;
 
 
@@ -26,12 +31,14 @@ public class Pet {
     }
 
 
-    public Pet(Long id, String name, int idade, String raca,  String imagem, List<String> tags) {
+    public Pet(Long id, String name, int idade, String raca,  String imagem,String descricao, Double confianca, List<String> tags) {
         this.id = id;
         this.name = name;
         this.idade = idade;
         this.raca = raca;
         this.imagem = imagem;
+        this.descricao = descricao;
+        this.confianca = confianca;
         this.tags = tags;
     }
 
@@ -85,4 +92,19 @@ public class Pet {
         this.tags = tags;
     }
 
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Double getConfianca() {
+        return confianca;
+    }
+
+    public void setConfianca(Double confianca) {
+        this.confianca = confianca;
+    }
 }
