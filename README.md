@@ -31,6 +31,16 @@ A arquitetura do projeto é dividida em camadas, com a API de Domínio (Java) or
 * **Uso:** O `CustomVisionService.java` está estruturado para receber o arquivo, mas a lógica de chamada à API do Custom Vision está simulada (mockada). Ele retorna uma *string* ou tag pré-definida no código para permitir que o fluxo de cadastro e o restante do projeto (salvar no banco com a tag) avancem sem a necessidade de uma conta Custom Vision totalmente treinada neste momento.
 
 ---
+## Representação
+
+![foto url  (1)](https://github.com/JaiDev-bot/PetCloud/blob/main/Skeaper.png)
+
+---
+![foto url  (1)](https://github.com/JaiDev-bot/PetCloud/blob/main/mingau.png)
+---
+![foto url  (1)](https://github.com/JaiDev-bot/PetCloud/blob/main/Jai.png)
+
+
 
 ## ⚙️ Requisitos
 
