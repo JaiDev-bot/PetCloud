@@ -36,8 +36,11 @@ A arquitetura do projeto é dividida em camadas, com a API de Domínio (Java) or
 ![foto url  (1)](https://github.com/JaiDev-bot/PetCloud/blob/main/Skeaper.png)
 
 ---
+
 ![foto url  (1)](https://github.com/JaiDev-bot/PetCloud/blob/main/mingau.png)
+
 ---
+## Gata especial
 ![foto url  (1)](https://github.com/JaiDev-bot/PetCloud/blob/main/Jai.png)
 
 
