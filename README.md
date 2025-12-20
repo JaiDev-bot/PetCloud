@@ -1,6 +1,6 @@
 ## Pet Cloud: Cadastro e classificação de pets 🐶
 
-Um sistema web completo desenvolvido em Java (Spring Boot), focado em gerenciar o cadastro de pets para adoção. O projeto utiliza serviços Azure para lidar com o armazenamento de imagens e a classificação automatizada das características do pet.
+Um sistema desenvolvido em Java (Spring Boot), focado em gerenciar o cadastro de pets para adoção. O projeto utiliza serviços Azure para lidar com o armazenamento de imagens e a classificação automatizada das características do pet.
 
 A arquitetura do projeto é dividida em camadas, com a API de Domínio (Java) orquestrando as operações de armazenamento e análise antes da persistência no banco de dados.
 
