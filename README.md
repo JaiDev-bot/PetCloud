@@ -4,6 +4,14 @@ Um sistema desenvolvido em Java (Spring Boot), focado em gerenciar o cadastro de
 
 A arquitetura do projeto é dividida em camadas, com a API de Domínio (Java) orquestrando as operações de armazenamento e análise antes da persistência no banco de dados.
 
+>[!IMPORTANT]
+>Se quiser ver uma documentação mais detalhada sobre a arquitetura:
+>
+>[![GitBook](https://img.shields.io/badge/GITBOOK-000?style=for-the-badge&logoColor=FFF&color=000)](https://app.gitbook.com/invite/3BzJD9kc8XUB2pCNxAEC/9gPjit0He8BL9usFzff5)
+>
+>
+
+
 ---
 
 ##  Funcionalidades principais
