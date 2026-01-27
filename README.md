@@ -30,12 +30,12 @@ A arquitetura do projeto é dividida em camadas, com a API de Domínio (Java) or
 
 ###  Azure Blob Storage (IMPLEMENTADO)
 
-* **Status:** **Funcional e em Produção.**
+* **Status:** **Funcional e em produção.**
 * **Uso:** O `AzureBlobService.java` está 100% implementado e é o serviço real responsável pelo upload e armazenamento das imagens dos pets, retornando a URL para uso.
 
 ###  Azure Custom Vision (SIMULAÇÃO)
 
-* **Status:** **Em Fase de Simulação (Mockado).**
+* **Status:** **Em fase de simulação (Mockado).**
 * **Uso:** O `CustomVisionService.java` está estruturado para receber o arquivo, mas a lógica de chamada à API do Custom Vision está simulada (mockada). Ele retorna uma *string* ou tag pré-definida no código para permitir que o fluxo de cadastro e o restante do projeto (salvar no banco com a tag) avancem sem a necessidade de uma conta Custom Vision totalmente treinada neste momento.
 
 ---
@@ -63,7 +63,7 @@ A arquitetura do projeto é dividida em camadas, com a API de Domínio (Java) or
 
 ---
 
-##  Como Rodar
+##  Como rodar
 
 #### 1. Configuração
 
