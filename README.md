@@ -8,8 +8,43 @@ A arquitetura do projeto é dividida em camadas, com a API de Domínio (Java) or
 >Se quiser ver uma documentação mais detalhada sobre a arquitetura:
 >
 >[![GitBook](https://img.shields.io/badge/GITBOOK-000?style=for-the-badge&logoColor=FFF&color=000)](https://app.gitbook.com/invite/3BzJD9kc8XUB2pCNxAEC/9gPjit0He8BL9usFzff5)
->
->
+
+
+## Diagrama de fluxo
+
+```mermaid
+flowchart TD
+    subgraph Local_Environment ["Aplicação Java (Spring Boot 3.4.12)"]
+        A[PetController] -->|MultipartFile| B[PetService]
+        B --> C{Orquestração}
+        C --> D[AzureBlobService]
+        C --> E[AzureAIService]
+        C --> F[PetRepository]
+    end
+
+    subgraph Azure_Infrastructure ["Infraestrutura Azure cloud"]
+        D -->|Upload| G[Azure Blob Storage]
+        G -->|URL | D
+        E -->|Binary Data| H[[Azure AI Vision Image Analysis]]
+        H -->|Tags | E
+    end
+
+    subgraph Data_Persistence ["Persistência de dados"]
+        F --> I[(PostgreSQL )]
+        I -- "Pet {id, name, url_imagem, tags[]}" --> F
+    end
+
+    subgraph User_Interface ["Acesso externo"]
+        J[Client / Swagger UI] -->|POST /pet| A
+        J -->|GET /pet| A
+    end
+
+   
+    style Azure_Infrastructure fill:#0078d4,color:#fff,stroke:#005a9e
+    style Local_Environment fill:#2d2d2d,color:#fff,stroke:#000
+    style User_Interface fill:#f4f4f4,color:#000,stroke:#333
+    style Data_Persistence fill:#333,color:#fff,stroke:#000
+```
 
 
 ---
